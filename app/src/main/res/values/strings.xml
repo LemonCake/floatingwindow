@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">FloatingWindowApp</string>
+    <string name="notification_text">\"sup bruh\"</string>
+    <string name="notification_exit">bye</string>
+    <string name="floaty_button_text">Launch Floaty</string>
+    <string name="floating_text">I\'m floating</string>
+    <string name="bye">Bye!</string>
+</resources>
