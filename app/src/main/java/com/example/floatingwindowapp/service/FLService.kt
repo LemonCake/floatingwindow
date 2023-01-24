@@ -15,7 +15,7 @@ import com.example.floatingwindowapp.AppContext
 import com.example.floatingwindowapp.R
 import com.example.floatingwindowapp.ui.main.Window
 
-const val TAG = "FLService"
+private const val TAG = "FLService"
 
 class FLService : Service() {
     private val stub = ServiceStub()
@@ -28,7 +28,7 @@ class FLService : Service() {
     override fun onBind(p0: Intent?): IBinder = stub
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        showNotification()
+//        showNotification()
 
         return START_STICKY
     }

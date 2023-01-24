@@ -10,9 +10,11 @@ import android.view.Gravity.TOP
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
 import com.example.floatingwindowapp.AppContext
 import com.example.floatingwindowapp.R
+import com.example.floatingwindowapp.service.FLFragmentHost
+import com.example.floatingwindowapp.service.FLFragmentNext
+import com.example.floatingwindowapp.service.FLMainFragment
 import kotlin.math.roundToInt
 
 @SuppressLint("StaticFieldLeak")
@@ -22,7 +24,8 @@ object Window {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     private val layoutInflater: LayoutInflater =
         context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    private val rootView: View = layoutInflater.inflate(R.layout.window, null)
+    private val rootView: View = layoutInflater.inflate(R.layout.fl_root_view, null)
+    private lateinit var fragmentHost: FLFragmentHost
 
     private val windowParams = WindowManager.LayoutParams(
         0,
@@ -39,12 +42,6 @@ object Window {
 
     init {
         initWindowParams()
-        initWindow()
-    }
-
-    private fun initWindow() {
-        rootView.findViewById<Button>(R.id.bye_button)
-            .apply { setOnClickListener { windowManager.removeView(rootView) } }
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -64,20 +61,29 @@ object Window {
         if (!rootView.isAttachedToWindow) {
             windowParams.token = windowToken
             windowManager.addView(rootView, windowParams)
+            fragmentHost = FLFragmentHost(rootView)
+            fragmentHost.getFragmentManager().beginTransaction()
+                .replace(R.id.fl_container, FLMainFragment.newInstance())
+                .commitNow()
         }
     }
 
     fun hide() {
         if (rootView.isAttachedToWindow) {
             windowManager.removeView(rootView)
+            fragmentHost.getFragmentManager().apply {
+                repeat(backStackEntryCount) { popBackStackImmediate() }
+            }
         }
     }
 
     fun move(windowToken: IBinder?, offset: Float) {
-        val dm = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(dm)
-        windowParams.x = (offset * dm.widthPixels).roundToInt()
-        windowParams.token = windowToken
-        windowManager.updateViewLayout(rootView, windowParams)
+        if (rootView.isAttachedToWindow) {
+            val dm = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(dm)
+            windowParams.x = (offset * dm.widthPixels).roundToInt()
+            windowParams.token = windowToken
+            windowManager.updateViewLayout(rootView, windowParams)
+        }
     }
 }
