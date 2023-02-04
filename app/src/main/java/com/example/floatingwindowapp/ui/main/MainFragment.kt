@@ -18,6 +18,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.example.floatingwindowapp.service.FLService
 import com.example.floatingwindowapp.R
 
@@ -84,10 +85,13 @@ class MainFragment : Fragment() {
                     )
                 }
 
-                override fun onPageSelected(position: Int) {
-                }
+                override fun onPageSelected(position: Int) = Unit
+
 
                 override fun onPageScrollStateChanged(state: Int) {
+                    if (state == ViewPager2.SCROLL_STATE_IDLE) {
+                        flRemoteService?.enableTouch()
+                    }
                 }
 
             })

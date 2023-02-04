@@ -5,10 +5,11 @@ import android.view.View
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.floatingwindowapp.R
+import com.example.floatingwindowapp.ui.main.FLTouchListener
 
-class FLFragmentNext : Fragment(R.layout.fl_fragment_next) {
+class FLThreadFragment : Fragment(R.layout.fl_thread_fragment) {
     companion object {
-        fun newInstance() = FLFragmentNext()
+        fun newInstance() = FLThreadFragment()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

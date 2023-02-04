@@ -91,7 +91,7 @@ class FLService : Service() {
 
         override fun moveOffset(windowToken: IBinder?, offset: Float) {
             Handler(Looper.getMainLooper()).post {
-                Window.move(windowToken, offset)
+                Window.move(offset)
             }
         }
 
@@ -101,7 +101,12 @@ class FLService : Service() {
             }
         }
 
-    }
+        override fun enableTouch() {
+            Handler(Looper.getMainLooper()).post {
+                Window.setTouch(true)
+            }
+        }
 
+    }
 
 }

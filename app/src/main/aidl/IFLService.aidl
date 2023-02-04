@@ -4,4 +4,6 @@ interface IFLService {
     void moveOffset(in IBinder windowToken, float offset) = 2;
 
     void removeWindow() = 3;
+
+    void enableTouch() = 4;
 }

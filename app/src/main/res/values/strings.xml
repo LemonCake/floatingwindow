@@ -5,6 +5,7 @@
     <string name="floaty_button_text">Launch Floaty</string>
     <string name="floating_text">I\'m floating</string>
     <string name="bye">Bye!</string>
-    <string name="fl_fragment_a">FL Fragment A\nProcess B</string>
-    <string name="fl_fragment_b">FL Fragment B\nProcess B</string>
+    <string name="fl_fragment_a">Inbox (proc B)</string>
+    <string name="fl_fragment_b">Thread View (proc B)</string>
+    <string name="i_am_a_thread">I am a thread:</string>
 </resources>

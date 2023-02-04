@@ -8,13 +8,14 @@ import android.util.DisplayMetrics
 import android.view.Gravity.LEFT
 import android.view.Gravity.TOP
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import com.example.floatingwindowapp.AppContext
 import com.example.floatingwindowapp.R
 import com.example.floatingwindowapp.service.FLFragmentHost
-import com.example.floatingwindowapp.service.FLFragmentNext
-import com.example.floatingwindowapp.service.FLMainFragment
+import com.example.floatingwindowapp.service.FLInboxFragment
+import com.example.floatingwindowapp.service.FLThreadFragment
 import kotlin.math.roundToInt
 
 @SuppressLint("StaticFieldLeak")
@@ -35,8 +36,7 @@ object Window {
         WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL,
         PixelFormat.TRANSLUCENT
     )
 
@@ -61,9 +61,10 @@ object Window {
         if (!rootView.isAttachedToWindow) {
             windowParams.token = windowToken
             windowManager.addView(rootView, windowParams)
+            rootView.setOnTouchListener(FLTouchListener())
             fragmentHost = FLFragmentHost(rootView)
             fragmentHost.getFragmentManager().beginTransaction()
-                .replace(R.id.fl_container, FLMainFragment.newInstance())
+                .replace(R.id.fl_container, FLInboxFragment.newInstance())
                 .commitNow()
         }
     }
@@ -77,13 +78,23 @@ object Window {
         }
     }
 
-    fun move(windowToken: IBinder?, offset: Float) {
+    fun move(offset: Float) {
         if (rootView.isAttachedToWindow) {
             val dm = DisplayMetrics()
             windowManager.defaultDisplay.getMetrics(dm)
             windowParams.x = (offset * dm.widthPixels).roundToInt()
-            windowParams.token = windowToken
             windowManager.updateViewLayout(rootView, windowParams)
         }
+    }
+
+    fun setTouch(touch: Boolean) {
+        val flags = if (!touch) {
+            windowParams.flags or WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        } else {
+            windowParams.flags and WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE.inv()
+        }
+
+        windowParams.flags = flags
+        windowManager.updateViewLayout(rootView, windowParams)
     }
 }
